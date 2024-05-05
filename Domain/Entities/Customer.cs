@@ -13,5 +13,15 @@ namespace Domain.Entities
         public string LastName { get; set; }
         public string Address { get; set; }
         public string PostalCode { get; set; }
+
+        public Customer() { }
+
+        public Customer(string firstName, string lastName, string address, string postalCode)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Address = address;
+            PostalCode = postalCode;
+        }
     }
 }
