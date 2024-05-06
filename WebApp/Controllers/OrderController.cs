@@ -11,6 +11,7 @@ using Application.ProductCQRS.Queries.GetProductQuery;
 using Application.CustomerCQRS.Queries.GetCustomerQuery;
 using Application.CustomerCQRS.Commands.UpdateCustomerCommand;
 using Application.OrderCQRS.Commands.UpdateOrderCommand;
+using Application.OrderCQRS.Commands.DeleteOrderCommand;
 
 namespace WebApp.Controllers
 {
@@ -23,18 +24,21 @@ namespace WebApp.Controllers
         private readonly CreateOrderCommandHandler _createOrderCommandHandler;
         private readonly GetAllOrdersQueryHandler _getAllOrdersQueryHandler;
         private readonly UpdateOrderCommandHandler _updateOrderCommandHandler;
+        private readonly DeleteOrderCommandHandler _deleteOrderCommandHandler;
         public OrderController(
             GetProductQueryHandler getProductQueryHandler,
             GetOrderQueryHandler getOrderHandler,
             CreateOrderCommandHandler createOrderCommandHandler,
             GetAllOrdersQueryHandler getAllOrdersQueryHandler,
-            UpdateOrderCommandHandler updateOrderCommandHandler)
+            UpdateOrderCommandHandler updateOrderCommandHandler,
+            DeleteOrderCommandHandler deleteOrderCommandHandler)
             {
                 _getProductQueryHandler = getProductQueryHandler;
                 _getOrderHandler = getOrderHandler;
                 _createOrderCommandHandler = createOrderCommandHandler;
                 _getAllOrdersQueryHandler = getAllOrdersQueryHandler;
                 _updateOrderCommandHandler = updateOrderCommandHandler;
+                _deleteOrderCommandHandler = deleteOrderCommandHandler;
             }
 
         [HttpGet]
@@ -113,6 +117,18 @@ namespace WebApp.Controllers
             return NoContent();
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteOrder(int id)
+        {
+            var command = new DeleteOrderCommand { OrderID= id };
+
+            if(await _deleteOrderCommandHandler.Handle(command)==0)
+            {
+                return BadRequest("Order does not exist.");
+            }
+
+            return NoContent();
+        }
         private async Task<decimal> CalculateTotalPrice(List<Item> items)
         {
             decimal totalPrice = 0;

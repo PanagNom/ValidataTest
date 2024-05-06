@@ -147,17 +147,7 @@ namespace WebApp.Controllers
             var command = new DeleteCustomerCommand { CustomerID = id };
 
             await _deleteCustomerCommandHandler.Handle(command);
-            /*
-            var existingCustomer = await _customerRepository.GetByIdAsync(id);
-
-            if (existingCustomer == null)
-            {
-                return NotFound();
-            }
-
-            await _customerRepository.DeleteAsync(id);
-            await _unitOfWork.saveChanges();
-            */
+            
             return NoContent();
         }
     }
