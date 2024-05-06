@@ -12,7 +12,7 @@ namespace Application.CustomerCQRS.Queries.GetCustomerQuery
             _customerRepository = customerRepository;
         }
 
-        public async Task<Customer> Handle(GetCustomerQuery query)
+        public async Task<Customer?> Handle(GetCustomerQuery query)
         {
             return await _customerRepository.GetByIdAsync(query.CustomerId);
         }

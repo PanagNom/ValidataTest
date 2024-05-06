@@ -9,6 +9,6 @@ namespace Domain.Interfaces
 {
     public interface IProductRepository
     {
-        Task<Product> GetProductAsync(int id);
+        Task<Product?> GetProductAsync(int id);
     }
 }

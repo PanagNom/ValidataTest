@@ -18,7 +18,7 @@ namespace Application.CustomerCQRS.Commands.UpdateCustomerCommand
 
         public async Task Handle(UpdateCustomerCommand query)
         {
-            await _customerRepository.Update(query.Customer);
+            _customerRepository.Update(query.Customer);
 
             try
             {

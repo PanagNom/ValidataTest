@@ -12,7 +12,7 @@ namespace Application.OrderCQRS.Queries.GetOrderQuery
             _orderRepository = orderRepository;
         }
 
-        public async Task<Order> Handle(GetOrderQuery query)
+        public async Task<Order?> Handle(GetOrderQuery query)
         {
             return await _orderRepository.GetOrderById(query.OrderId);
         }

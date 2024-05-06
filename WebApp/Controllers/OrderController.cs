@@ -8,6 +8,9 @@ using Application.OrderCQRS.Commands.CreateOrderCommand;
 using Application.OrderCQRS.Queries.GetAllOrdersQuery;
 using Application.OrderCQRS.Queries.GetOrderQuery;
 using Application.ProductCQRS.Queries.GetProductQuery;
+using Application.CustomerCQRS.Queries.GetCustomerQuery;
+using Application.CustomerCQRS.Commands.UpdateCustomerCommand;
+using Application.OrderCQRS.Commands.UpdateOrderCommand;
 
 namespace WebApp.Controllers
 {
@@ -15,32 +18,23 @@ namespace WebApp.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        //private readonly IUnitOfWork _unitOfWork;
-        //private readonly IOrderRepository _orderRepository;
-        //private readonly ICustomerRepository _customerRepository;
-        //private readonly DbContextClass _dbContextClass;
         private readonly GetProductQueryHandler _getProductQueryHandler;
         private readonly GetOrderQueryHandler _getOrderHandler;
         private readonly CreateOrderCommandHandler _createOrderCommandHandler;
         private readonly GetAllOrdersQueryHandler _getAllOrdersQueryHandler;
+        private readonly UpdateOrderCommandHandler _updateOrderCommandHandler;
         public OrderController(
-            //IUnitOfWork unitOfWork, 
-            //IOrderRepository orderRepository, 
-            //ICustomerRepository customerRepository, 
-            //DbContextClass dbContextClass,
             GetProductQueryHandler getProductQueryHandler,
             GetOrderQueryHandler getOrderHandler,
             CreateOrderCommandHandler createOrderCommandHandler,
-            GetAllOrdersQueryHandler getAllOrdersQueryHandler)
+            GetAllOrdersQueryHandler getAllOrdersQueryHandler,
+            UpdateOrderCommandHandler updateOrderCommandHandler)
             {
-                //_unitOfWork = unitOfWork;
-                //_orderRepository = orderRepository;
-                //_customerRepository = customerRepository;
-                //_dbContextClass = dbContextClass;
                 _getProductQueryHandler = getProductQueryHandler;
                 _getOrderHandler = getOrderHandler;
                 _createOrderCommandHandler = createOrderCommandHandler;
                 _getAllOrdersQueryHandler = getAllOrdersQueryHandler;
+                _updateOrderCommandHandler = updateOrderCommandHandler;
             }
 
         [HttpGet]
@@ -48,8 +42,6 @@ namespace WebApp.Controllers
         {
             var query = new GetAllOrdersQuery();
             var orders = await _getAllOrdersQueryHandler.Handle(query);
-
-            //var orders = await _orderRepository.GetAllOrders();
 
             if (orders == null)
             {
@@ -71,46 +63,54 @@ namespace WebApp.Controllers
             }
 
             return order;
-            /*
-            var order = await _orderRepository.GetOrderById(id);
-
-            if (order == null)
-            {
-                return NotFound();
-            }
-            return Ok(order);
-            */
         }
 
         [HttpPost]
         public async Task<ActionResult> CreateOrder(int CustomerId, Order order)
         {
             var command = new CreateOrderCommand { CustomerId = CustomerId, Order = order };
-
-            await _createOrderCommandHandler.Handle(command);
-
+            try
+            {
+                await _createOrderCommandHandler.Handle(command);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
             return Ok();
-            /*
-            if (!ModelState.IsValid)
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateOrder(int Id, Order order)
+        {
+            if (Id != order.Id)
             {
                 return BadRequest();
             }
 
-            Customer customer = await _customerRepository.GetByIdAsync(order.CustomerId);
+            var query = new GetOrderQuery { OrderId = Id };
+            var databaseOrder = await _getOrderHandler.Handle(query);
 
-            if ( customer == null)
+            if (databaseOrder == null)
             {
-                return BadRequest();
+                return NotFound("Not found");
             }
 
-            order.OrderDate = DateTime.Now;
-            order.TotalPrice = CalculateTotalPrice(order.Items);
+            databaseOrder.CustomerId = order.CustomerId;
+            databaseOrder.Items = order.Items;
 
-            await _orderRepository.Add(order);
-            await _unitOfWork.saveChanges();
+            var command = new UpdateOrderCommand { OrderID = Id, Order = databaseOrder };
+            try
+            {
+                await _updateOrderCommandHandler.Handle(command);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return BadRequest("Database concurrency issue.");
+            }
 
-            return CreatedAtAction(nameof(GetOrder), new { id = order.Id }, order);
-            */
+            return NoContent();
         }
 
         private async Task<decimal> CalculateTotalPrice(List<Item> items)

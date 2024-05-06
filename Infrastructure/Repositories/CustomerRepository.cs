@@ -21,7 +21,7 @@ namespace Infrastructure.Repositories
             _orderRepository = orderRepository;
         }
 
-        public async Task<Customer> GetByIdAsync(int id)
+        public async Task<Customer?> GetByIdAsync(int id)
         {
             return await _dbContext.Customers.Where(c => c.Id == id).FirstOrDefaultAsync(); ;
         }
@@ -53,7 +53,7 @@ namespace Infrastructure.Repositories
             return myCustomerOrders.OrderBy(o => o.OrderDate);
         }
 
-        public async Task Update(Customer customer)
+        public void Update(Customer customer)
         {
             _dbContext.Entry(customer).State = EntityState.Modified;
         }

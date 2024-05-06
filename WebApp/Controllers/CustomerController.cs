@@ -48,10 +48,13 @@ namespace WebApp.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
         {
-            //var customers = await _customerRepository.GetAllAsync();
             var query = new GetCustomersQuery();
             var customers = await _getCustomersQueryHandler.Handle(query);
-            
+
+            if (customers == null)
+            {
+                return NotFound("The are no orders saved.");
+            }
             return Ok(customers);
         }
        
@@ -132,25 +135,9 @@ namespace WebApp.Controllers
             }
             catch(DbUpdateConcurrencyException)
             {
-                return BadRequest("Database concurency issue.");
+                return BadRequest("Database concurrency issue.");
             }
-            /*
-            if (id != customer.Id)
-            {
-                return BadRequest();
-            }
-
-            _customerRepository.Update(customer);
-
-            try
-            {
-                await _unitOfWork.saveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                return NotFound();
-            }
-            */
+            
             return NoContent();
         }
 

@@ -9,7 +9,7 @@ namespace Domain.Interfaces
 {
     public interface IOrderRepository
     {
-        Task<Order> GetOrderById(int id);
+        Task<Order?> GetOrderById(int id);
         Task<IEnumerable<Order>> GetAllOrders();
         Task<IEnumerable<Order>> GetCustomerOrders(int id);
         Task Delete(int id);

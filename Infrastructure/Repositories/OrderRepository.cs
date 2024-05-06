@@ -38,7 +38,7 @@ namespace Infrastructure.Repositories
             return await _dbContext.Orders.Include(o => o.Items).Where(o=>o.CustomerId==id).ToListAsync();
         }
 
-        public async Task<Order> GetOrderById(int id)
+        public async Task<Order?> GetOrderById(int id)
         {
             return await _dbContext.Orders.Include(o => o.Items).FirstOrDefaultAsync(o=>o.Id==id);
         }

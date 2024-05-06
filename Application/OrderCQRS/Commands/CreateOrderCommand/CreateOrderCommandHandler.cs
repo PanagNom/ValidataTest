@@ -30,12 +30,17 @@ namespace Application.OrderCQRS.Commands.CreateOrderCommand
             {
                 throw new InvalidOperationException("Customer not found");
             }
+            
+            if(command.Order.Items == null)
+            {
+                throw new InvalidOperationException("The order can not be placed without any items.");
+            }
 
             command.Order.OrderDate = DateTime.Now;
             command.Order.TotalPrice = CalculateTotalPrice(command.Order.Items);
             command.Order.CustomerId = customer.Id;
 
-            _orderRepository.Add(command.Order);
+            await _orderRepository.Add(command.Order);
             await _unitOfWork.saveChanges();
         }
 

@@ -13,7 +13,7 @@ namespace Application.ProductCQRS.Queries.GetProductQuery
             _productRepository = productRepository;
         }
 
-        public async Task<Product> Handle(GetProductQuery query)
+        public async Task<Product?> Handle(GetProductQuery query)
         {
             return await _productRepository.GetProductAsync(query.Id);
         }

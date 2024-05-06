@@ -18,7 +18,7 @@ namespace Infrastructure.Repositories
         {
             _dbContext = dbContext;
         }
-        public async Task<Product> GetProductAsync(int id)
+        public async Task<Product?> GetProductAsync(int id)
         {
             return await _dbContext.Products.Where(p => p.Id == id).FirstOrDefaultAsync();
         }

@@ -14,15 +14,19 @@ namespace Application.CustomerCQRS.Commands.DeleteCustomerCommand
             _customerRepository = customerRepository;
         }
 
-        public async Task Handle(DeleteCustomerCommand query)
+        public async Task<int> Handle(DeleteCustomerCommand query)
         {
             var existingCustomer = await _customerRepository.GetByIdAsync(query.CustomerID);
 
-            if (existingCustomer != null)
+            if (existingCustomer == null)
             {
-                await _customerRepository.DeleteAsync(query.CustomerID);
-                await _unitOfWork.saveChanges();
+                return 0;
             }
+
+            await _customerRepository.DeleteAsync(query.CustomerID);
+            await _unitOfWork.saveChanges();
+
+            return 1;
         }
     }
 }

@@ -14,6 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Application.CustomerCQRS.Queries.GetCustomerQuery;
+using Application.OrderCQRS.Commands.UpdateOrderCommand;
 
 namespace Application
 {
@@ -31,7 +32,8 @@ namespace Application
                 .AddTransient<GetCustomerQueryHandler>()
                 .AddTransient<GetCustomersQueryHandler>()
                 .AddTransient<GetProductQueryHandler>()
-                .AddTransient<GetOrdersByDateHandler>();
+                .AddTransient<GetOrdersByDateHandler>()
+                .AddTransient<UpdateOrderCommandHandler>();
             
             return services;
         }
