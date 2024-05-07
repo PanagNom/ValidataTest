@@ -20,16 +20,16 @@ namespace Application.OrderCQRS.Commands.DeleteOrderCommand
             _orderRepository = orderRepository;
         }
 
-        public async Task<int> Handle(DeleteOrderCommand query)
+        public async Task<int> Handle(DeleteOrderCommand command)
         {
-            var existingOrder = await _orderRepository.GetOrderById(query.OrderID);
+            var existingOrder = await _orderRepository.GetOrderById(command.OrderID);
 
             if (existingOrder == null)
             {
                 return 0;
             }
 
-            await _orderRepository.Delete(query.OrderID);
+            await _orderRepository.Delete(command.OrderID);
             await _unitOfWork.saveChanges();
 
             return 1;

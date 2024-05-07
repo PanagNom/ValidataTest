@@ -16,19 +16,19 @@ namespace Application.CustomerCQRS.Commands.UpdateCustomerCommand
             _customerRepository = customerRepository;
         }
 
-        public async Task Handle(UpdateCustomerCommand query)
+        public async Task Handle(UpdateCustomerCommand command)
         {
-            var databaseCustomer = await _customerRepository.GetByIdAsync(query.CustomerId);
+            var databaseCustomer = await _customerRepository.GetByIdAsync(command.CustomerId);
 
             if (databaseCustomer == null)
             {
                 return ;
             }
 
-            databaseCustomer.FirstName = query.Customer.FirstName;
-            databaseCustomer.LastName = query.Customer.LastName;
-            databaseCustomer.Address = query.Customer.Address;
-            databaseCustomer.PostalCode = query.Customer.PostalCode;
+            databaseCustomer.FirstName = command.Customer.FirstName;
+            databaseCustomer.LastName = command.Customer.LastName;
+            databaseCustomer.Address = command.Customer.Address;
+            databaseCustomer.PostalCode = command.Customer.PostalCode;
 
             _customerRepository.Update(databaseCustomer);
 

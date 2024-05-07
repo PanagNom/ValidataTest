@@ -18,9 +18,9 @@ namespace Application.CustomerCQRS.Commands.CreateCustomerCommand
             _customerRepository = customerRepository;
         }
 
-        public async Task Handle(CreateCustomerCommand query)
+        public async Task Handle(CreateCustomerCommand command)
         {
-            await _customerRepository.AddAsync(query.Customer);
+            await _customerRepository.AddAsync(command.Customer);
             await _unitOfWork.saveChanges();
         }
     }

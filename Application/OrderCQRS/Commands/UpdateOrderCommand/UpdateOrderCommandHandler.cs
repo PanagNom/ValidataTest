@@ -28,18 +28,18 @@ namespace Application.OrderCQRS.Commands.UpdateOrderCommand
             _productRepository = productRepository;
         }
 
-        public async Task Handle(UpdateOrderCommand query)
+        public async Task Handle(UpdateOrderCommand command)
         {
-            var databaseOrder = await _orderRepository.GetOrderById(query.OrderID);
+            var databaseOrder = await _orderRepository.GetOrderById(command.OrderID);
 
             if (databaseOrder == null)
             {
                 return;
             }
 
-            databaseOrder.CustomerId = query.Order.CustomerId;
-            databaseOrder.Items = query.Order.Items;
-            databaseOrder.TotalPrice = await CalculateTotalPrice(query.Order.Items);
+            databaseOrder.CustomerId = command.Order.CustomerId;
+            databaseOrder.Items = command.Order.Items;
+            databaseOrder.TotalPrice = await CalculateTotalPrice(command.Order.Items);
 
             _orderRepository.Update(databaseOrder);
 
