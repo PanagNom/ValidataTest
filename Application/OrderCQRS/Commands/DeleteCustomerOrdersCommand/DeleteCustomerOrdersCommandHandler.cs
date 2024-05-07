@@ -13,13 +13,11 @@ namespace Application.OrderCQRS.Commands.DeleteCustomerOrdersCommand
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly DeleteOrderCommandHandler _deleteOrderCommandHandler;
 
-        public DeleteCustomerOrdersCommandHandler(IUnitOfWork unitOfWork, IOrderRepository orderRepository, DeleteOrderCommandHandler deleteOrderCommandHandler)
+        public DeleteCustomerOrdersCommandHandler(IUnitOfWork unitOfWork, IOrderRepository orderRepository)
         {
             _orderRepository = orderRepository;
             _unitOfWork = unitOfWork;
-            _deleteOrderCommandHandler = deleteOrderCommandHandler;
         }
 
         public async Task Handle(DeleteCustomerOrdersComannd command)

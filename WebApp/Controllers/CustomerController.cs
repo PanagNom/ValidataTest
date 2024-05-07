@@ -105,13 +105,7 @@ namespace WebApp.Controllers
             var query = new GetOrdersByDateQuery { CustomerId = id };
 
             var orders = await _getOrdersByDateHandler.Handle(query);
-            /*
-            if (customer == null)
-            {
-                return NotFound();
-            }
-            await _customerRepository.GetCustomerOrdersByDateOrderAsync(id)
-            */
+
             return Ok(orders);
         }
 
@@ -126,15 +120,7 @@ namespace WebApp.Controllers
             var command = new CreateCustomerCommand { Customer = customer };
             
             await _createCustomerCommandHandler.Handle(command);
-            /*
-            if (customer==null)
-            {
-                return BadRequest();
-            }
 
-            await _customerRepository.AddAsync(customer);
-            await _unitOfWork.saveChanges();
-            */
             return CreatedAtAction(nameof(GetCustomer), new { id = customer.Id }, customer);
         }
 
