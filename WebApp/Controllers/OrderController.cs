@@ -102,6 +102,17 @@ namespace WebApp.Controllers
         /// <param name="CustomerId"></param>
         /// <param name="order"></param>
         /// <returns> This endpoint doesn't return anything. </returns>
+        /// <remarks>
+        /// {
+        ///     "customerId": 1,
+        ///     "items": [
+        ///      {
+        ///        "productId": 1
+        ///        "quantity": 2
+        ///      }
+        ///     ]
+        /// }
+        /// </remarks>
         [HttpPost]
         public async Task<ActionResult> CreateOrder(int CustomerId, Order order)
         {
@@ -124,6 +135,17 @@ namespace WebApp.Controllers
         /// <param name="Id"></param>
         /// <param name="order"></param>
         /// <returns></returns>
+        /// <remarks>
+        /// {
+        ///     "customerId": 1,
+        ///     "items": [
+        ///      {
+        ///        "productId": 1
+        ///        "quantity": 2
+        ///      }
+        ///     ]
+        /// }
+        /// </remarks>
         [HttpPut]
         public async Task<IActionResult> UpdateOrder(int Id, Order order)
         {

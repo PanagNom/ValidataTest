@@ -1,0 +1,7 @@
+Assumptions:
+
+- Assume a relational database for data storage, and Entity Framework for ORM.
+- Each customer can have multiple orders, but an order belongs to only one customer.
+- Each order can have multiple order items.
+- Product prices are fixed and not subject to change.
+- Orders can be retrieved by filtering on order dates.
