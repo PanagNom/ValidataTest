@@ -107,7 +107,8 @@ namespace WebApp.Controllers
         ///     "customerId": 1,
         ///     "items": [
         ///      {
-        ///        "productId": 1
+        ///        "orderId": 0,
+        ///        "productId": 1,
         ///        "quantity": 2
         ///      }
         ///     ]
@@ -137,11 +138,13 @@ namespace WebApp.Controllers
         /// <returns></returns>
         /// <remarks>
         /// {
+        ///     "id": 4,
+        ///     "orderDate": "2024-05-07T20:41:33.952Z",
         ///     "customerId": 1,
         ///     "items": [
         ///      {
         ///        "productId": 1
-        ///        "quantity": 2
+        ///        "quantity": 3
         ///      }
         ///     ]
         /// }
