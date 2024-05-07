@@ -16,6 +16,8 @@ using System.Threading.Tasks;
 using Application.CustomerCQRS.Queries.GetCustomerQuery;
 using Application.OrderCQRS.Commands.UpdateOrderCommand;
 using Application.OrderCQRS.Commands.DeleteOrderCommand;
+using Application.OrderCQRS.Commands.DeleteCustomerOrdersCommand;
+using Application.OrderCQRS.Queries.GetCustomerOrdersQuery;
 
 namespace Application
 {
@@ -35,8 +37,9 @@ namespace Application
                 .AddTransient<GetProductQueryHandler>()
                 .AddTransient<GetOrdersByDateHandler>()
                 .AddTransient<UpdateOrderCommandHandler>()
-                .AddTransient<DeleteOrderCommandHandler>();
-            
+                .AddTransient<DeleteOrderCommandHandler>()
+                .AddTransient<DeleteCustomerOrdersCommandHandler>()
+                .AddTransient<GetCustomerOrdersQueryHandler>();
             return services;
         }
     }

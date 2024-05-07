@@ -12,6 +12,7 @@ using Application.CustomerCQRS.Queries.GetCustomerQuery;
 using Application.CustomerCQRS.Commands.UpdateCustomerCommand;
 using Application.OrderCQRS.Commands.UpdateOrderCommand;
 using Application.OrderCQRS.Commands.DeleteOrderCommand;
+using Application.OrderCQRS.Commands.DeleteCustomerOrdersCommand;
 
 namespace WebApp.Controllers
 {
@@ -25,13 +26,16 @@ namespace WebApp.Controllers
         private readonly GetAllOrdersQueryHandler _getAllOrdersQueryHandler;
         private readonly UpdateOrderCommandHandler _updateOrderCommandHandler;
         private readonly DeleteOrderCommandHandler _deleteOrderCommandHandler;
+        private readonly DeleteCustomerOrdersCommandHandler _deleteCustomerOrdersCommandHandler;
+
         public OrderController(
             GetProductQueryHandler getProductQueryHandler,
             GetOrderQueryHandler getOrderHandler,
             CreateOrderCommandHandler createOrderCommandHandler,
             GetAllOrdersQueryHandler getAllOrdersQueryHandler,
             UpdateOrderCommandHandler updateOrderCommandHandler,
-            DeleteOrderCommandHandler deleteOrderCommandHandler)
+            DeleteOrderCommandHandler deleteOrderCommandHandler,
+            DeleteCustomerOrdersCommandHandler deleteCustomerOrdersCommandHandler)
             {
                 _getProductQueryHandler = getProductQueryHandler;
                 _getOrderHandler = getOrderHandler;
@@ -39,6 +43,7 @@ namespace WebApp.Controllers
                 _getAllOrdersQueryHandler = getAllOrdersQueryHandler;
                 _updateOrderCommandHandler = updateOrderCommandHandler;
                 _deleteOrderCommandHandler = deleteOrderCommandHandler;
+                _deleteCustomerOrdersCommandHandler = deleteCustomerOrdersCommandHandler;
             }
 
         [HttpGet]
@@ -129,6 +134,17 @@ namespace WebApp.Controllers
 
             return NoContent();
         }
+
+        [HttpDelete("/customer/{id}")]
+        public async Task<IActionResult> DeleteCustomerOrders(int id)
+        {
+            var command = new DeleteCustomerOrdersComannd { CustomerId = id };
+
+            await _deleteCustomerOrdersCommandHandler.Handle(command);
+            
+            return NoContent();
+        }
+
         private async Task<decimal> CalculateTotalPrice(List<Item> items)
         {
             decimal totalPrice = 0;

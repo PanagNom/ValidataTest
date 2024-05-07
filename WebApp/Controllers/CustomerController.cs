@@ -10,6 +10,7 @@ using Application.CustomerCQRS.Queries.GetCustomersQuery;
 using Application.CustomerCQRS.Queries.GetOrdersByDate;
 using Application.OrderCQRS.Queries.GetAllOrdersQuery;
 using Application.OrderCQRS.Queries.GetOrderQuery;
+using Application.OrderCQRS.Commands.DeleteCustomerOrdersCommand;
 
 namespace WebApp.Controllers
 {
@@ -25,24 +26,23 @@ namespace WebApp.Controllers
         private readonly GetCustomerQueryHandler _getCustomerQueryHandler;
         private readonly GetCustomersQueryHandler _getCustomersQueryHandler;
         private readonly GetOrdersByDateHandler _getOrdersByDateHandler;
+        private readonly DeleteCustomerOrdersCommandHandler _deleteCustomerOrdersCommandHandler;
         public CustomerController(
-            //IUnitOfWork unitOfWork, 
-            //ICustomerRepository customerRepository,
             CreateCustomerCommandHandler createCustomerCommandHandler,
             UpdateCustomerCommandHandler updateCustomerCommandHandler,
             DeleteCustomerCommandHandler deleteCustomerCommandHandler,
             GetCustomerQueryHandler getCustomerQueryHandler,
             GetCustomersQueryHandler getCustomersQueryHandler,
-            GetOrdersByDateHandler getOrdersByDateHandler)
+            GetOrdersByDateHandler getOrdersByDateHandler,
+            DeleteCustomerOrdersCommandHandler deleteCustomerOrdersCommandHandler)
         {
-            //_unitOfWork = unitOfWork;
-            //_customerRepository = customerRepository;
             _createCustomerCommandHandler = createCustomerCommandHandler;
             _updateCustomerCommandHandler = updateCustomerCommandHandler;
             _deleteCustomerCommandHandler = deleteCustomerCommandHandler;
             _getCustomerQueryHandler = getCustomerQueryHandler;
             _getCustomersQueryHandler = getCustomersQueryHandler;
             _getOrdersByDateHandler = getOrdersByDateHandler;
+            _deleteCustomerOrdersCommandHandler = deleteCustomerOrdersCommandHandler;
         }
 
         [HttpGet]
@@ -144,6 +144,10 @@ namespace WebApp.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCustomer(int id)
         {
+            var command_1 = new DeleteCustomerOrdersComannd { CustomerId = id };
+            
+            await _deleteCustomerOrdersCommandHandler.Handle(command_1);
+
             var command = new DeleteCustomerCommand { CustomerID = id };
 
             await _deleteCustomerCommandHandler.Handle(command);
