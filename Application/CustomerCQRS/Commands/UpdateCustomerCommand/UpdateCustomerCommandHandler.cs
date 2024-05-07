@@ -18,7 +18,19 @@ namespace Application.CustomerCQRS.Commands.UpdateCustomerCommand
 
         public async Task Handle(UpdateCustomerCommand query)
         {
-            _customerRepository.Update(query.Customer);
+            var databaseCustomer = await _customerRepository.GetByIdAsync(query.CustomerId);
+
+            if (databaseCustomer == null)
+            {
+                return ;
+            }
+
+            databaseCustomer.FirstName = query.Customer.FirstName;
+            databaseCustomer.LastName = query.Customer.LastName;
+            databaseCustomer.Address = query.Customer.Address;
+            databaseCustomer.PostalCode = query.Customer.PostalCode;
+
+            _customerRepository.Update(databaseCustomer);
 
             try
             {

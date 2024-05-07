@@ -147,25 +147,8 @@ namespace WebApp.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCustomer(int id, Customer customer)
         {
-            if(id != customer.Id)
-            {
-                return BadRequest();
-            }
+            var command = new UpdateCustomerCommand { CustomerId = id, Customer = customer };
 
-            var query = new GetCustomerQuery {CustomerId = id };
-            var databaseCustomer = await _getCustomerQueryHandler.Handle(query);
-            
-            if(databaseCustomer == null)
-            {
-                return NotFound("Not found");
-            }
-
-            databaseCustomer.FirstName = customer.FirstName;
-            databaseCustomer.LastName = customer.LastName;
-            databaseCustomer.Address = customer.Address;
-            databaseCustomer.PostalCode = customer.PostalCode;
-
-            var command = new UpdateCustomerCommand { CustomerId = id, Customer = databaseCustomer };
             try
             {
                 await _updateCustomerCommandHandler.Handle(command);

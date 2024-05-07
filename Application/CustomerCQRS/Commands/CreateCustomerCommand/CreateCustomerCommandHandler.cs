@@ -9,6 +9,7 @@ namespace Application.CustomerCQRS.Commands.CreateCustomerCommand
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICustomerRepository _customerRepository;
+
         public CreateCustomerCommandHandler(
             IUnitOfWork unitOfWork,
             ICustomerRepository customerRepository)

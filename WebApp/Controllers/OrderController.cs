@@ -127,23 +127,8 @@ namespace WebApp.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateOrder(int Id, Order order)
         {
-            if (Id != order.Id)
-            {
-                return BadRequest();
-            }
+            var command = new UpdateOrderCommand { OrderID = Id, Order = order };
 
-            var query = new GetOrderQuery { OrderId = Id };
-            var databaseOrder = await _getOrderHandler.Handle(query);
-
-            if (databaseOrder == null)
-            {
-                return NotFound("Not found");
-            }
-
-            databaseOrder.CustomerId = order.CustomerId;
-            databaseOrder.Items = order.Items;
-
-            var command = new UpdateOrderCommand { OrderID = Id, Order = databaseOrder };
             try
             {
                 await _updateOrderCommandHandler.Handle(command);

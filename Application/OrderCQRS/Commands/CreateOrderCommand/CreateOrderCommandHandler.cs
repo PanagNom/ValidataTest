@@ -10,16 +10,18 @@ namespace Application.OrderCQRS.Commands.CreateOrderCommand
         private readonly IUnitOfWork _unitOfWork;
         private readonly IOrderRepository _orderRepository;
         private readonly ICustomerRepository _customerRepository;  
-        private readonly DbContextClass _contextClass;
-        public CreateOrderCommandHandler(IUnitOfWork unitOfWork, 
+        private readonly IProductRepository _productRepository;
+
+        public CreateOrderCommandHandler(
+            IUnitOfWork unitOfWork, 
             IOrderRepository orderRepository, 
             ICustomerRepository customerRepository,
-            DbContextClass dbContextClass)
+            IProductRepository productRepository)
         {
             _orderRepository = orderRepository;
             _unitOfWork = unitOfWork;
             _customerRepository = customerRepository;
-            _contextClass = dbContextClass;
+            _productRepository = productRepository;
         }
 
         public async Task Handle(CreateOrderCommand command)
@@ -37,19 +39,19 @@ namespace Application.OrderCQRS.Commands.CreateOrderCommand
             }
 
             command.Order.OrderDate = DateTime.Now;
-            command.Order.TotalPrice = CalculateTotalPrice(command.Order.Items);
+            command.Order.TotalPrice = await CalculateTotalPrice(command.Order.Items);
             command.Order.CustomerId = customer.Id;
 
             await _orderRepository.Add(command.Order);
             await _unitOfWork.saveChanges();
         }
 
-        private decimal CalculateTotalPrice(List<Item> items)
+        private async Task<decimal> CalculateTotalPrice(List<Item> items)
         {
             decimal totalPrice = 0;
             foreach (var item in items)
             {
-                var product = _contextClass.Products.Find(item.ProductId);
+                var product = await _productRepository.GetProductAsync(item.ProductId);
                 if (product == null)
                 {
                     throw new InvalidOperationException("Product not found");
