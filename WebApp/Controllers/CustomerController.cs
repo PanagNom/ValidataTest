@@ -14,12 +14,13 @@ using Application.OrderCQRS.Commands.DeleteCustomerOrdersCommand;
 
 namespace WebApp.Controllers
 {
+    /// <summary>
+    /// Customer Controller.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class CustomerController : ControllerBase
     {
-        //private readonly IUnitOfWork _unitOfWork;
-        //private readonly ICustomerRepository _customerRepository;
         private readonly CreateCustomerCommandHandler _createCustomerCommandHandler;
         private readonly UpdateCustomerCommandHandler _updateCustomerCommandHandler;
         private readonly DeleteCustomerCommandHandler _deleteCustomerCommandHandler;
@@ -27,6 +28,17 @@ namespace WebApp.Controllers
         private readonly GetCustomersQueryHandler _getCustomersQueryHandler;
         private readonly GetOrdersByDateHandler _getOrdersByDateHandler;
         private readonly DeleteCustomerOrdersCommandHandler _deleteCustomerOrdersCommandHandler;
+        
+        /// <summary>
+        /// Customer Controller Constructor.
+        /// </summary>
+        /// <param name="createCustomerCommandHandler"></param>
+        /// <param name="updateCustomerCommandHandler"></param>
+        /// <param name="deleteCustomerCommandHandler"></param>
+        /// <param name="getCustomerQueryHandler"></param>
+        /// <param name="getCustomersQueryHandler"></param>
+        /// <param name="getOrdersByDateHandler"></param>
+        /// <param name="deleteCustomerOrdersCommandHandler"></param>
         public CustomerController(
             CreateCustomerCommandHandler createCustomerCommandHandler,
             UpdateCustomerCommandHandler updateCustomerCommandHandler,
@@ -45,6 +57,10 @@ namespace WebApp.Controllers
             _deleteCustomerOrdersCommandHandler = deleteCustomerOrdersCommandHandler;
         }
 
+        /// <summary>
+        /// You can retrieve all the Customers.
+        /// </summary>
+        /// <returns> This endpoint returns a list of all Customers. </returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
         {
@@ -57,7 +73,12 @@ namespace WebApp.Controllers
             }
             return Ok(customers);
         }
-       
+
+        /// <summary>
+        /// You can retrieve a Customer by its id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns> This endpoint returns a Customer. </returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<Customer>> GetCustomer(int id)
         {
@@ -73,6 +94,11 @@ namespace WebApp.Controllers
             return Ok(customer);
         }
 
+        /// <summary>
+        /// You can retrieve a Customers orders ordered by date. 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns> This endpoint returns the list of orders of a Customer ordered by date. </returns>
         [HttpGet("orders/{id}")]
         public async Task<ActionResult<IEnumerable<Order>>> GetCustomerOrders(int id)
         {
@@ -89,6 +115,11 @@ namespace WebApp.Controllers
             return Ok(orders);
         }
 
+        /// <summary>
+        /// You can create a Customer here.
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns> This endpoint return the created Customer. </returns>
         [HttpPost]
         public async Task<ActionResult<Customer>> CreateCustomer(Customer customer)
         {
@@ -107,6 +138,12 @@ namespace WebApp.Controllers
             return CreatedAtAction(nameof(GetCustomer), new { id = customer.Id }, customer);
         }
 
+        /// <summary>
+        /// You can update a Customer.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="customer"></param>
+        /// <returns> This endpoint doesn't return anything. </returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCustomer(int id, Customer customer)
         {
@@ -141,6 +178,11 @@ namespace WebApp.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// You can delete a Customer here. (It also deletes its orders.)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns> This endpoint doesn't return anything. </returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCustomer(int id)
         {

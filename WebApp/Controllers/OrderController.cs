@@ -16,6 +16,9 @@ using Application.OrderCQRS.Commands.DeleteCustomerOrdersCommand;
 
 namespace WebApp.Controllers
 {
+    /// <summary>
+    /// Order Controller.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class OrderController : ControllerBase
@@ -28,6 +31,16 @@ namespace WebApp.Controllers
         private readonly DeleteOrderCommandHandler _deleteOrderCommandHandler;
         private readonly DeleteCustomerOrdersCommandHandler _deleteCustomerOrdersCommandHandler;
 
+        /// <summary>
+        /// Order Controller Constructor.
+        /// </summary>
+        /// <param name="getProductQueryHandler"></param>
+        /// <param name="getOrderHandler"></param>
+        /// <param name="createOrderCommandHandler"></param>
+        /// <param name="getAllOrdersQueryHandler"></param>
+        /// <param name="updateOrderCommandHandler"></param>
+        /// <param name="deleteOrderCommandHandler"></param>
+        /// <param name="deleteCustomerOrdersCommandHandler"></param>
         public OrderController(
             GetProductQueryHandler getProductQueryHandler,
             GetOrderQueryHandler getOrderHandler,
@@ -46,6 +59,10 @@ namespace WebApp.Controllers
                 _deleteCustomerOrdersCommandHandler = deleteCustomerOrdersCommandHandler;
             }
 
+        /// <summary>
+        /// You can retrieve all Orders made.
+        /// </summary>
+        /// <returns> This endpoint returns a list of all Orders made. </returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
         {
@@ -60,6 +77,11 @@ namespace WebApp.Controllers
             return Ok(orders);
         }
 
+        /// <summary>
+        /// You can retreive an Order by its id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns> This endpoint returns an Order. </returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<Order>> GetOrder(int id)
         {
@@ -74,6 +96,12 @@ namespace WebApp.Controllers
             return order;
         }
 
+        /// <summary>
+        /// You can create an Order here.
+        /// </summary>
+        /// <param name="CustomerId"></param>
+        /// <param name="order"></param>
+        /// <returns> This endpoint doesn't return anything. </returns>
         [HttpPost]
         public async Task<ActionResult> CreateOrder(int CustomerId, Order order)
         {
@@ -90,6 +118,12 @@ namespace WebApp.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// You can update a Order here.
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <param name="order"></param>
+        /// <returns></returns>
         [HttpPut]
         public async Task<IActionResult> UpdateOrder(int Id, Order order)
         {
@@ -122,6 +156,11 @@ namespace WebApp.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// You can delete an Order here by its id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns> This endpoint doesn't return anything. </returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrder(int id)
         {
@@ -135,7 +174,12 @@ namespace WebApp.Controllers
             return NoContent();
         }
 
-        [HttpDelete("/customer/{id}")]
+        /// <summary>
+        /// You can delete all the Orders of a Customer.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns> This endpoint doesn't return anything. </returns>
+        [HttpDelete("customer/{id}")]
         public async Task<IActionResult> DeleteCustomerOrders(int id)
         {
             var command = new DeleteCustomerOrdersComannd { CustomerId = id };
